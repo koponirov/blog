@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Article, ArticleDocument } from './schemas/article.schema';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { CreateArticleDto } from './dto/create-article.dto';
+import { UpdateArticleDto } from './dto/update-article.dto';
 
 @Injectable()
 export class ArticleService {
@@ -15,9 +16,24 @@ export class ArticleService {
     return article;
   }
 
-  getAll() {}
+  async update(id: ObjectId, dto: UpdateArticleDto): Promise<ObjectId> {
+    const article = await this.ArticleModel.findByIdAndUpdate(id, dto);
+    return article._id;
+  }
 
-  getOne() {}
+  async getAll(): Promise<Article[]> {
+    const articles = await this.ArticleModel.find();
+    return articles;
+  }
 
-  delete() {}
+  async getOne(id: ObjectId): Promise<Article> {
+    const article = await this.ArticleModel.findById(id);
+    return article;
+  }
+
+  async delete(id: ObjectId): Promise<Article> {
+    console.log(id);
+    const article = await this.ArticleModel.findByIdAndDelete(id);
+    return article._id;
+  }
 }

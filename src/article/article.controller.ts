@@ -1,6 +1,16 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
+import { ObjectId } from 'mongoose';
+import { UpdateArticleDto } from './dto/update-article.dto';
 
 @Controller('/articles')
 export class ArticleController {
@@ -11,12 +21,23 @@ export class ArticleController {
     return this.ArticleService.create(dto);
   }
 
-  @Get()
-  async getAll() {
-    return 'getAll articles works';
+  @Put(':id')
+  async update(@Param('id') id: ObjectId, @Body() dto: UpdateArticleDto) {
+    return this.ArticleService.update(id, dto);
   }
 
-  async getOne() {}
+  @Get()
+  async getAll() {
+    return this.ArticleService.getAll();
+  }
 
-  async delete() {}
+  @Get(':id')
+  async getOne(@Param('id') id: ObjectId) {
+    return this.ArticleService.getOne(id);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: ObjectId) {
+    return this.ArticleService.delete(id);
+  }
 }
