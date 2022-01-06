@@ -28,8 +28,10 @@ export class ArticleService {
     return article._id;
   }
 
-  async getAll(): Promise<Article[]> {
-    const articles = await this.ArticleModel.find();
+  async getAll(count = 10, offset = 0): Promise<Article[]> {
+    const articles = await this.ArticleModel.find()
+      .skip(Number(offset))
+      .limit(Number(count));
     return articles;
   }
 
@@ -39,8 +41,14 @@ export class ArticleService {
   }
 
   async delete(id: ObjectId): Promise<Article> {
-    console.log(id);
     const article = await this.ArticleModel.findByIdAndDelete(id);
     return article._id;
+  }
+
+  async search(query: string): Promise<Article[]>{
+    const articles = await this.ArticleModel.find({
+      title: { $regex: new RegExp(query,'i') },
+    })
+    return articles
   }
 }

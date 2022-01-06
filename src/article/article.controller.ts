@@ -5,7 +5,10 @@ import {
   Get,
   Param,
   Post,
-  Put, UploadedFile, UseInterceptors
+  Put,
+  Query,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -32,8 +35,13 @@ export class ArticleController {
   }
 
   @Get()
-  async getAll() {
-    return this.ArticleService.getAll();
+  getAll(@Query('count') count: number, @Query('offset') offset: number) {
+    return this.ArticleService.getAll(count, offset);
+  }
+
+  @Get('/search')
+  search(@Query('query') query: string) {
+    return this.ArticleService.search(query);
   }
 
   @Get(':id')
