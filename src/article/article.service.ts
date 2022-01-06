@@ -4,15 +4,22 @@ import { Article, ArticleDocument } from './schemas/article.schema';
 import { Model, ObjectId } from 'mongoose';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { FileService, FileType } from '../file/file.service';
 
 @Injectable()
 export class ArticleService {
   constructor(
     @InjectModel(Article.name) private ArticleModel: Model<ArticleDocument>,
+    private FileService: FileService
   ) {}
 
-  async create(dto: CreateArticleDto): Promise<Article> {
-    const article = await this.ArticleModel.create({ ...dto, likes: 0 });
+  async create(dto: CreateArticleDto, picture): Promise<Article> {
+    const picturePath = this.FileService.createFile(FileType.IMAGE, picture)
+    const article = await this.ArticleModel.create({
+      ...dto,
+      picture: picturePath,
+      likes: 0,
+    });
     return article;
   }
 

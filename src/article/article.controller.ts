@@ -5,20 +5,25 @@ import {
   Get,
   Param,
   Post,
-  Put,
+  Put, UploadedFile, UseInterceptors
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { ObjectId } from 'mongoose';
 import { UpdateArticleDto } from './dto/update-article.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('/articles')
 export class ArticleController {
   constructor(private ArticleService: ArticleService) {
   }
   @Post()
-  async create(@Body() dto: CreateArticleDto) {
-    return this.ArticleService.create(dto);
+  @UseInterceptors(FileInterceptor('picture'))
+  create(
+    @UploadedFile() picture: Express.Multer.File,
+    @Body() dto: CreateArticleDto,
+  ) {
+    return this.ArticleService.create(dto, picture);
   }
 
   @Put(':id')

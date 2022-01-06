@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ArticleModule } from './article/article.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -8,6 +9,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       'mongodb+srv://superuser1:superuser1@cluster0.soxoc.mongodb.net/blog?retryWrites=true&w=majority',
     ),
     ArticleModule,
+    FileModule
   ],
 })
 export class AppModule {
